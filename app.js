@@ -8,12 +8,12 @@ const app = express();
 
 // Configure Mongoose
 mongoose.connect(mongDbUrl, { useNewUrlParser: true })
-    .then(response => {
-        console.log('Success');
-    })
-    .catch(error => {
-        console.log('Fail');
-    });
+.then(response => {
+    console.log('Success');
+})
+.catch(error => {
+    console.log('Fail');
+});
 
 // Configure express
 app.use(express.json());
@@ -25,8 +25,12 @@ app.engine('handlebars', hbs({ defaultLayout: 'default' }));
 app.set('view engine', 'handlebars');
 
 // Routes
-const router = require('./routes/index');
-app.use('/', router);
+const defaultRouter = require('./routes/default');
+const adminRouter = require('./routes/admin');
+app.use('/', defaultRouter);
+app.use('/admin', adminRouter);
+
+
 
 app.listen(PORT, () => {
     console.log('ok');
