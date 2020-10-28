@@ -8,7 +8,19 @@ router.all('/*', (req, res, next) => {
 })
 
 router.route('/')
-    .get(adminController.index)
+    .get(adminController.index);
 
+router.route('/posts')
+    .get(adminController.getPosts);
+
+router.route('/posts/create')
+    .get(adminController.createPost)
+    .post(adminController.storePost);
+
+router.route('/posts/edit/:id')
+    .get(adminController.editPost);
+
+router.route('/posts/delete/:id')
+    .delete(adminController.deletePost);
 
 module.exports = router;

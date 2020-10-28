@@ -8,11 +8,24 @@
             
             {{> admin/sidebar}}
 
-            {{{ body }}}
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
 
+                {{> admin/message}}
+
+                {{{ body }}}
+
+            </main>
+            
         </div>
     </div>
     <script src="/vendor/jquery/jquery.min.js"></script>
     <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            setTimeout(function() {
+                $('.auto-hide').slideUp(300);
+            }, 2000);
+        });
+    </script>
 </body>
 </html>

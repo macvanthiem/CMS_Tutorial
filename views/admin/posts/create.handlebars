@@ -1,0 +1,33 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Create a new post</h1>
+</div>
+<form action="/admin/posts/create" method="post" class="">
+    <div class="form-group">
+        <label class="h4 text-muted" for="title">Title:</label>
+        <input type="text" class="form-control" id="title" placeholder="Enter the title ..." name="title" required>
+        <div class="invalid-feedback">Please fill out this field.</div>
+    </div>
+    <div class="form-group">
+        <label class="h4 text-muted" for="status">Status:</label>
+        <select class="form-control" id="status" name="status">
+            <option value="Public">Public</option>
+            <option value="Private">Private</option>
+            <option value="Draft">Draft</option>
+        </select>
+    </div>
+    <div class="form-group custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="allow_comments" name="allow_comments" checked>
+        <label class="custom-control-label h5 text-muted" for="allow_comments">Allow Comments</label>
+    </div>
+    <div class="form-group">
+        <label class="h4 text-muted" for="description">Description:</label>
+        <textarea class="form-control", id="description" name="description" rows="3" placeholder="Enter the description ..." required></textarea>
+    </div>
+    <div class="form-group">
+        <label class="h4 text-muted" for="content">Content:</label>
+        <textarea class="form-control", id="content" name="content" rows="10" placeholder="Enter your content here..." required></textarea>
+    </div>
+    <div class="text-center">
+        <button class="btn btn-outline-success btn-lg">Create Post</button>
+    </div>
+</form>

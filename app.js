@@ -2,12 +2,14 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const hbs = require('express-handlebars');
-const { mongDbUrl, PORT } = require('./config/configuration');
-
+const { mongoDbUrl, PORT, globalVar } = require('./config/configuration');
+const flash = require('connect-flash');
+const session = require('express-session');
+const methodOverride = require('method-override');
 const app = express();
 
 // Configure Mongoose
-mongoose.connect(mongDbUrl, { useNewUrlParser: true })
+mongoose.connect(mongoDbUrl, { useNewUrlParser: true })
 .then(response => {
     console.log('Success');
 })
@@ -15,7 +17,18 @@ mongoose.connect(mongDbUrl, { useNewUrlParser: true })
     console.log('Fail');
 });
 
-// Configure express
+// Flash and Session
+
+app.use(session({
+    secret: 'anysecret',
+    saveUninitialized: true,
+    resave: true
+}));
+
+app.use(flash());
+app.use(globalVar);
+
+// Configure Express
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -24,13 +37,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.engine('handlebars', hbs({ defaultLayout: 'default' }));
 app.set('view engine', 'handlebars');
 
+// Method Override
+app.use(methodOverride('newMethod'));
+
 // Routes
 const defaultRouter = require('./routes/default');
 const adminRouter = require('./routes/admin');
 app.use('/', defaultRouter);
 app.use('/admin', adminRouter);
-
-
 
 app.listen(PORT, () => {
     console.log('ok');
