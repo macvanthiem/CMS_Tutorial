@@ -25,7 +25,46 @@
             setTimeout(function() {
                 $('.auto-hide').slideUp(300);
             }, 2000);
-        });
+
+            $('#create-category-btn').on('click', function (e) {
+                e.preventDefault();
+                var data = $('#category-title').val();
+                
+                $.ajax({
+                    url: '/admin/categories',
+                    method: 'POST',
+                    data: {name: data},
+                    success: function (response) {
+                        var html = `<tr>
+                                        <td>${response.title}</td>
+                                        <td class="d-flex justify-content-center">
+                                            <a href="/admin/categories/edit/${response._id}" class="btn btn-sm btn-success mr-2"><i class="fa fa-fw fa-edit"></i></a>
+                                            <form action="/admin/categories/delete/${response._id}?newMethod=DELETE" method="post">
+                                                <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-fw fa-trash"></i></button>
+                                            </form>
+                                        </td>
+                                    </tr>`;
+                        
+                        $('.category-list').append(html);
+                        $('#category-title').val('');
+                        $('#create-success-category').addClass('show');
+                        $('#create-success-category').addClass('auto-hide');
+                        setTimeout(function() {
+                            $('.auto-hide').slideUp(300);
+                        }, 2000);
+                    },
+                    error: function (error) {
+                        $('#create-fail-category').addClass('show');
+                        $('#create-fail-category').addClass('auto-hide');
+                        setTimeout(function() {
+                            $('.auto-hide').slideUp(300);
+                        }, 2000);
+                    },
+                });
+            });
+
+        }); 
+
     </script>
 </body>
 </html>
