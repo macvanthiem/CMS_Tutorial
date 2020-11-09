@@ -6,6 +6,9 @@ const { mongoDbUrl, PORT, globalVar } = require('./config/configuration');
 const flash = require('connect-flash');
 const session = require('express-session');
 const methodOverride = require('method-override');
+const fileUpload = require('express-fileupload');
+const passport = require('passport');
+
 const app = express();
 
 // Configure Mongoose
@@ -24,9 +27,14 @@ app.use(session({
     saveUninitialized: true,
     resave: true
 }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(flash());
 app.use(globalVar);
+
+// File Upload
+app.use(fileUpload());
 
 // Configure Express
 app.use(express.json());
@@ -43,8 +51,12 @@ app.use(methodOverride('newMethod'));
 // Routes
 const defaultRouter = require('./routes/default');
 const adminRouter = require('./routes/admin');
+
 app.use('/', defaultRouter);
 app.use('/admin', adminRouter);
+app.get('/*', (req, res) => {
+    res.render('404');
+});
 
 app.listen(PORT, () => {
     console.log('ok');

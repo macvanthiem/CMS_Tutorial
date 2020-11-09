@@ -7,6 +7,10 @@ const PostSchema = new Schema({
         type: String,
         required: true
     },
+    banner: {
+        type: String,
+        default: 'http://placehold.it/758x380'
+    },
 
     status: {
         type: String,

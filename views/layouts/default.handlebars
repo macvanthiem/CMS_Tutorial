@@ -1,13 +1,19 @@
 
 {{> default/header }}
+<body>
+    <!-- Navigation -->
+    {{> default/navigation }}
 
-<!-- Navigation -->
-{{> default/navigation }}
+    <!-- Message -->
+    {{> default/message}}
 
-<!-- Page Content -->
-<div class="container">
-    {{{ body }}}
-</div>
+    <!-- Page Content -->
+    <div class="container">
+        {{{ body }}}
+    </div>
 
-<!-- Footer -->
-{{> default/footer }}
+    <!-- Footer -->
+    {{> default/footer }}
+    
+</body>
+</html>

@@ -13,9 +13,9 @@
             <tbody class="category-list">
                 {{#each cats }}
                     <tr>
-                        <td>{{title}}</td>
+                        <td id="title{{_id}}">{{title}}</td>
                         <td class="d-flex justify-content-center">
-                            <a href="/admin/categories/edit/{{_id}}" class="btn btn-sm btn-success mr-2"><i class="fa fa-fw fa-edit"></i></a>
+                            <button onClick="show('{{_id}}', '{{title}}')" class="btn btn-sm btn-success mr-2"><i class="fa fa-fw fa-edit"></i></button>
                             <form action="/admin/categories/delete/{{_id}}?newMethod=DELETE" method="post">
                                 <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-fw fa-trash"></i></button>
                             </form>
@@ -37,11 +37,34 @@
                 <button class="btn btn-outline-success btn-block" id="create-category-btn">Create Category</button>
             </div>
         </form>
-        <div id="create-success-category" class="alert alert-success alert-dismissible fade mt-3" role="alert">
-            Category created successfully.
+        <div class="mt-3">
+            <div id="create-success-category" class="alert alert-success alert-dismissible fade" role="alert">
+                Category created successfully.
+            </div>
+            <div id="create-fail-category" class="alert alert-danger alert-dismissible fade" role="alert">
+                Category created failly.
+            </div>
+            <div id="update-success-category" class="alert alert-success alert-dismissible fade" role="alert">
+                Category updated successfully.
+            </div>
+            <div id="update-fail-category" class="alert alert-danger alert-dismissible fade" role="alert">
+                Category updated failly.
+            </div>
         </div>
-        <div id="create-fail-category" class="alert alert-danger alert-dismissible fade mt-3" role="alert">
-            Category created failly.
+    </div>
+</div>
+
+<div id="myModal" class="modal">
+    <div class="modal-content1">
+        <div class="form-group">
+            <label class="h4 text-muted" for="title">Update Category:</label>
+            <input type="text" style="display: none;" id="category-id">
+            <input type="text" class="form-control" id="category-title-update" placeholder="Enter the title ..." name="title" required>
+            <div class="invalid-feedback">Please fill out this field.</div>
+        </div>
+        <div class="d-flex justify-content-end">
+            <button onclick="cancle()" class="btn btn-secondary mr-3">Cancle</button>
+            <button onclick="update_category()" id="update-category" class="btn btn-info">Update</button>
         </div>
     </div>
 </div>
