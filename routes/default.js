@@ -55,7 +55,7 @@ passport.deserializeUser(function(id, done) {
 router.route('/login')
     .get(checkLogin ,defaultController.loginGet)
     .post(passport.authenticate('local', {
-        successRedirect: '/admin',
+        successRedirect: '/',
         failureRedirect: '/login',
         successFlash: true,
         failureFlash: true,
@@ -66,5 +66,7 @@ router.route('/register')
     .get(defaultController.registerGet)
     .post(defaultController.registerPost);
 
+router.route('/preview')
+    .post(defaultController.preview);    
 
 module.exports = router;

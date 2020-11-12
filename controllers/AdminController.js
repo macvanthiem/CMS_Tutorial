@@ -11,7 +11,7 @@ module.exports = {
 
     // Posts
     getPosts: (req, res) => {
-        Post.find().populate('category').lean().then(posts => {
+        Post.find().populate('category').populate('user').lean().then(posts => {
             res.render('admin/posts', {posts: posts});
         })
         .catch(error => {
@@ -45,6 +45,7 @@ module.exports = {
             allow_comments: req.body.allow_comments ? true : false,
             desc: req.body.description,
             content: req.body.content,
+            user: req.user._id,
             status: req.body.status,
             category: req.body.category,
             banner: `/uploads/${fileName}`,

@@ -12,7 +12,7 @@ const passport = require('passport');
 const app = express();
 
 // Configure Mongoose
-mongoose.connect(mongoDbUrl, { useNewUrlParser: true })
+mongoose.connect(mongoDbUrl, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
 .then(response => {
     console.log('Success');
 })
@@ -54,6 +54,7 @@ const adminRouter = require('./routes/admin');
 
 app.use('/', defaultRouter);
 app.use('/admin', adminRouter);
+
 app.get('/*', (req, res) => {
     res.render('404');
 });

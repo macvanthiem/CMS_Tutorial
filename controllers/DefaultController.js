@@ -2,11 +2,15 @@ const Post = require('../models/Post').Post;
 const Category = require('../models/Category').Category;
 const User = require('../models/User').User;
 const bcrypt = require('bcrypt');
+const createDomPurify = require('dompurify');
+const { JSDOM } = require('jsdom');
+const dompurify = createDomPurify(new JSDOM().window);
+const marked = require('marked');
 
 module.exports = {
 
     index: async (req, res) => {
-        const posts = await Post.find().lean(); 
+        const posts = await Post.find().populate('user').lean(); 
         const cats = await Category.find().lean();
         res.render('default/index', {posts: posts, cats: cats});
     },
@@ -54,6 +58,13 @@ module.exports = {
             });
         }
 
-    }
+    },
+
+    preview: (req, res) => {
+        res.status(200).json({
+            message: 'ok',
+            data: dompurify.sanitize(marked(req.body.content))
+        })
+    },
 
 };

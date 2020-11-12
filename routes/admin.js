@@ -5,7 +5,13 @@ const adminController = require('../controllers/AdminController');
 
 function isUserAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
-        next();
+        if (req.user.role) {
+            next();
+        } else {
+            req.flash('error-message', 'You can not use this function. Contact the administrator for the answer.');
+            res.redirect('/');
+        }
+        
     } else {
         res.redirect('/login');
     }
