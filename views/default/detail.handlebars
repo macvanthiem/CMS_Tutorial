@@ -1,0 +1,74 @@
+<div class="row">
+
+    <div class="col-md-8">
+        <div class="my-4">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item" aria-current="page"><a href="/news/1">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{post.title}}</li>
+                </ol>
+            </nav>
+        </div>
+        <img src="{{post.banner}}" alt="Card image cap" class="card-img-top">
+        <h2 class="card-title">{{post.title}}</h2>
+        <p><span class="badge badge-success">{{post.category.title}}</span></p>
+        <p><b><i>{{post.desc}}</i></b></p>
+        <p class="text-muted">Posted on {{post.created_at}} by<a href=""> {{post.user.first_name}} {{post.user.last_name}}</a></p>
+        <div>
+            {{{post.sanitizedHtml}}}
+        </div>
+        <p style="margin: 30px 0;" class="text-right text-muted"><i>Follow: <a href="">{{post.user.first_name}} {{post.user.last_name}}</a></i></p>
+    </div>
+
+    <div class="col-md-4">
+
+        {{#if user}}
+            <div class="card my-4">
+                <h5 class="card-header">Profile</h5>
+                <div class="card-body row">
+                    <div class="col-md-4">
+                        <img src="/uploads/img_avatar1.png" width="100%" class="rounded-circle" alt="">
+                    </div>
+                    <div class="col-md-8">
+                        <h5>{{name}}</h5>
+                        <p>{{email}}</p>
+                        {{#if role}}
+                            <a href="/admin"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        {{/if}}
+
+        <div class="card my-4">
+            <h5 class="card-header">Search</h5>
+            <div class="card-body">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search for...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-secondary" type="button">Go!</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories Widget -->
+
+        <div class="card my-4">
+            <h5 class="card-header">Categories</h5>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <ul class="list-unstyled mb-0">
+                            {{#each cats}}
+                                <li class="mb-3">
+                                    <a href="#">{{title}}</a>
+                                </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

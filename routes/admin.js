@@ -1,5 +1,4 @@
 const express = require('express');
-const AdminController = require('../controllers/AdminController');
 const router = express.Router();
 const adminController = require('../controllers/AdminController');
 
@@ -50,9 +49,6 @@ router.route('/categories/update/:id')
 
 router.route('/categories/delete/:id')
     .delete(adminController.deleteCategory);
-
-router.route('/logout')
-    .get(adminController.logout);
 
 router.route('/comments')
     .get(adminController.getComments);

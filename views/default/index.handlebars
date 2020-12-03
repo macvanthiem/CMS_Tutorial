@@ -1,16 +1,27 @@
 <div class="row">
 
-    <div class="col-md-8">
-        <h1 class="my-4">Page Heading
-            <small>Secondary Text</small>
-        </h1>
+    <div class="col-md-8 my-4">
+
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">Home/</li>
+            </ol>
+        </nav>
+
         {{#each posts}}
             <div class="card mb-4">
-                <img src="{{banner}}" alt="Card image cap" class="card-img-top">
+                <div class="row">
+                    <div class="col-md-5">
+                        <img src="{{banner}}" alt="Card image cap" class="card-img-top">
+                    </div>
+                    <div class="col-md-7">
+                        <h3 class="card-title my-2">{{title}}</h3>
+                    </div>
+                </div>
                 <div class="card-body">
-                    <h2 class="card-title">{{title}}</h2>
+                    <p><span class="badge badge-success">{{category.title}}</span></p>
                     <p class="card-text">{{desc}}</p>
-                    <a href="#" class="btn btn-info">Read More &rarr;</a>
+                    <a href="/posts/{{slug}}" class="btn btn-info">Read More</a>
                 </div>
                 <div class="card-footer text-muted">
                     Posted on {{created_at}} by
@@ -18,19 +29,51 @@
                 </div>
             </div>
         {{/each}}
-        <ul class="pagination justify-content-center mb-4">
-            <li class="page-item">
-                <a href="#" class="page-link">Older</a>
-            </li>
-            <li class="page-item disabled">
-                <a href="#" class="page-link">Newer</a>
-            </li>
-        </ul>
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                {{#if pre}}
+                    <li class="page-item">
+                        <a class="page-link" href="/news/{{pre_value}}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {{/if}}
+                {{#each list_page}}
+                    <li class="page-item">
+                        <a class="page-link" href="/news/{{this}}">{{this}}</a>
+                    </li>
+                {{/each}}
+                {{#if next}}
+                    <li class="page-item">
+                        <a class="page-link" href="/news/{{next_value}}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {{/if}}
+            </ul>
+        </nav>
 
     </div>
 
     <div class="col-md-4">
-
+        {{#if user}}
+            <div class="card my-4">
+                <h5 class="card-header">Profile</h5>
+                <div class="card-body row">
+                    <div class="col-md-4">
+                        <img src="/uploads/img_avatar1.png" width="100%" class="rounded-circle" alt="">
+                    </div>
+                    <div class="col-md-8">
+                        <h5>{{name}}</h5>
+                        <p>{{email}}</p>
+                        {{#if role}}
+                            <a href="/admin"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        {{/if}}
         <div class="card my-4">
             <h5 class="card-header">Search</h5>
             <div class="card-body">
@@ -42,9 +85,7 @@
                 </div>
             </div>
         </div>
-
         <!-- Categories Widget -->
-
         <div class="card my-4">
             <h5 class="card-header">Categories</h5>
             <div class="card-body">
@@ -61,15 +102,5 @@
                 </div>
             </div>
         </div>
-
-        <!-- Side Widget -->
-
-        <div class="card my-4">
-            <h5 class="card-header">Side Widget</h5>
-            <div class="card-body">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse, nostrum.
-            </div>
-        </div>
-
     </div>
 </div>

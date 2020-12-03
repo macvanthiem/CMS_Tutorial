@@ -18,7 +18,7 @@ router.all('/*', (req, res, next) => {
     next();
 })
 
-router.route('/')
+router.route('/news/:page')
     .get(defaultController.index);
 
 passport.use(new localStrategy({
@@ -55,7 +55,7 @@ passport.deserializeUser(function(id, done) {
 router.route('/login')
     .get(checkLogin ,defaultController.loginGet)
     .post(passport.authenticate('local', {
-        successRedirect: '/',
+        successRedirect: '/news/1',
         failureRedirect: '/login',
         successFlash: true,
         failureFlash: true,
@@ -67,6 +67,12 @@ router.route('/register')
     .post(defaultController.registerPost);
 
 router.route('/preview')
-    .post(defaultController.preview);    
+    .post(defaultController.preview);
+    
+router.route('/posts/:slug')
+    .get(defaultController.postDetail);
+
+router.route('/logout')
+    .get(defaultController.logout);
 
 module.exports = router;

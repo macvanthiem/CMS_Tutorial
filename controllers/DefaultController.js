@@ -10,9 +10,31 @@ const marked = require('marked');
 module.exports = {
 
     index: async (req, res) => {
-        const posts = await Post.find().populate('user').lean(); 
+        let per_page = 1;
+        let page = req.params.page || 1;
+
+        const posts = await Post.find().skip(per_page*page - per_page).limit(per_page).populate('user').populate('category').lean(); 
+        const count_posts = await Post.countDocuments();
+        let count_page = Math.ceil(count_posts/per_page);
+        let list_page = new Array();
+        for (let i = 1; i <= count_page; i++) {
+            list_page.push(i);
+        }
+        let pre = page > 1 ? true : false;
+        let pre_value = Number(page) - 1 ;
+        let next = count_page > page ? true : false; 
+        let next_value = Number(page) +1;
         const cats = await Category.find().lean();
-        res.render('default/index', {posts: posts, cats: cats});
+        if (req.user) {
+            let user = req.user;
+            let user_name = user.last_name + ' ' + user.first_name;
+            let email = user.email;
+            let role = user.role;
+            res.render('default/index', {posts: posts, cats: cats, list_page: list_page, pre: pre, pre_value: pre_value, next: next, next_value: next_value, name : user_name, email: email, role: role});
+        } else {
+            res.render('default/index', {posts: posts, cats: cats, list_page: list_page, pre: pre, pre_value: pre_value, next: next, next_value: next_value});
+        }
+        
     },
     loginGet: (req, res) => {
         res.render('default/login');
@@ -60,11 +82,33 @@ module.exports = {
 
     },
 
+    // Logout
+    logout: (req, res) => {
+        req.flash('success-message', 'You have been logouted.');
+        req.logout();
+        res.redirect('/');
+    },
+
     preview: (req, res) => {
         res.status(200).json({
             message: 'ok',
-            data: dompurify.sanitize(marked(req.body.content))
+            data: marked(req.body.content)
         })
+    },
+
+    postDetail: async (req, res) => {
+        var slug = req.params.slug;
+        var post = await Post.findOne({slug: slug}).populate('user').populate('category').lean();
+        var cats = await Category.find().lean();
+        if (req.user) {
+            let user = req.user;
+            let user_name = user.last_name + ' ' + user.first_name;
+            let email = user.email;
+            let role = user.role;
+            res.render('default/detail', {post: post, cats: cats, name : user_name, email: email, role: role});
+        } else {
+            res.render('default/detail', {post: post, cats: cats});
+        }
     },
 
 };

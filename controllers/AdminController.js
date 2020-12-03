@@ -44,7 +44,7 @@ module.exports = {
             title: req.body.title,
             allow_comments: req.body.allow_comments ? true : false,
             desc: req.body.description,
-            content: req.body.content,
+            markdown: req.body.markdown,
             user: req.user._id,
             status: req.body.status,
             category: req.body.category,
@@ -97,7 +97,7 @@ module.exports = {
             post.title = req.body.title;
             post.allow_comments = req.body.allow_comments ? true : false;
             post.desc = req.body.description;
-            post.content = req.body.content;
+            post.markdown = req.body.markdown;
             post.status = req.body.status;
             post.category = req.body.category;
             if (req.body.checkUpload == '0') {
@@ -173,13 +173,6 @@ module.exports = {
             req.flash('success-message', `The post ${deleteCategory.title} has been deleted.`);
             res.redirect('/admin/categories');
         });
-    },
-
-    // Logout
-    logout: (req, res) => {
-        req.flash('success-message', 'You have been logouted.');
-        req.logout();
-        res.redirect('/');
     },
 
     // Comments
