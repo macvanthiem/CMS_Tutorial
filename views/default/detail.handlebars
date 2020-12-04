@@ -10,12 +10,12 @@
             </nav>
         </div>
         <img src="{{post.banner}}" alt="Card image cap" class="card-img-top">
-        <h2 class="card-title">{{post.title}}</h2>
+        <h1 class="card-title mt-3">{{post.title}}</h1>
         <p><span class="badge badge-success">{{post.category.title}}</span></p>
         <p><b><i>{{post.desc}}</i></b></p>
         <p class="text-muted">Posted on {{post.created_at}} by<a href=""> {{post.user.first_name}} {{post.user.last_name}}</a></p>
         <div>
-            {{{post.sanitizedHtml}}}
+            {{{post.content}}}
         </div>
         <p style="margin: 30px 0;" class="text-right text-muted"><i>Follow: <a href="">{{post.user.first_name}} {{post.user.last_name}}</a></i></p>
     </div>
@@ -27,7 +27,7 @@
                 <h5 class="card-header">Profile</h5>
                 <div class="card-body row">
                     <div class="col-md-4">
-                        <img src="/uploads/img_avatar1.png" width="100%" class="rounded-circle" alt="">
+                        <img src="/img/img_avatar1.png" width="100%" class="rounded-circle" alt="">
                     </div>
                     <div class="col-md-8">
                         <h5>{{name}}</h5>

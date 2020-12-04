@@ -3,6 +3,7 @@ const router = express.Router();
 const defaultController = require('../controllers/DefaultController');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
+const { post } = require('./admin');
 const localStrategy = require('passport-local').Strategy;
 const User = require('../models/User').User;
 
@@ -65,14 +66,20 @@ router.route('/login')
 router.route('/register')
     .get(defaultController.registerGet)
     .post(defaultController.registerPost);
-
-router.route('/preview')
-    .post(defaultController.preview);
     
 router.route('/posts/:slug')
     .get(defaultController.postDetail);
 
 router.route('/logout')
     .get(defaultController.logout);
+
+router.route('/files')
+    .get(defaultController.getImage);
+
+router.route('/delete_file')
+    .post(defaultController.deleteImage);
+
+router.route('/upload')
+    .post(defaultController.uploadImage);
 
 module.exports = router;

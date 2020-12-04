@@ -5,7 +5,6 @@
     <thead class="thead-dark">
         <tr>
             <th scope="col">Title</th>
-            <th scope="col">Description</th>
             <th scope="col">Category</th>
             <th scope="col">Created_by</th>
             <th scope="col">Allow Comment</th>
@@ -17,13 +16,12 @@
         {{#each posts }}
             <tr>
                 <td>{{title}}</td>
-                <td>{{desc}}</td>
                 <td>{{category.title}}</td>
                 <td>{{user.first_name}} {{user.last_name}}</td>
                 <td>{{allow_comments}}</td>
                 <td>{{status}}</td>
                 <td class="d-flex">
-                    <a href="#" class="btn btn-sm btn-info mr-2"><i class="fa fa-fw fa-eye"></i></a>
+                    <a href="/admin/posts/show/{{_id}}" class="btn btn-sm btn-info mr-2"><i class="fa fa-fw fa-eye"></i></a>
                     <a href="/admin/posts/edit/{{_id}}" class="btn btn-sm btn-success mr-2"><i class="fa fa-fw fa-edit"></i></a>
                     <form action="/admin/posts/delete/{{_id}}?newMethod=DELETE" method="post">
                         <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-fw fa-trash"></i></button>

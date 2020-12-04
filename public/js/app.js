@@ -105,21 +105,3 @@ function imageUpload () {
     document.getElementById('checkUpload').value = '0';
 
 }
-
-function preview() {
-    var x = document.getElementById('markdown').value;
-    let data = {};
-    data.content = x;
-    var json = JSON.stringify(data);
-
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            var res = JSON.parse(xmlhttp.responseText);
-            document.getElementById('preview').innerHTML = res.data;
-        };
-    };
-    xmlhttp.open("POST", "/preview", true);
-    xmlhttp.setRequestHeader('Content-type','application/json; charset=utf-8');
-    xmlhttp.send(json);
-}

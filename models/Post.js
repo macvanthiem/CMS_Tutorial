@@ -1,10 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const marked = require('marked')
 const slugify = require('slugify');
-const createDomPurify = require('dompurify');
-const { JSDOM } = require('jsdom');
-const dompurify = createDomPurify(new JSDOM().window);
 
 const PostSchema = new Schema({
     
@@ -32,12 +28,7 @@ const PostSchema = new Schema({
         required: true
     },
 
-    markdown: {
-        type: String,
-        required: true
-    },
-
-    sanitizedHtml: {
+    content: {
         type: String,
         required: true
     },
@@ -74,10 +65,6 @@ const PostSchema = new Schema({
 PostSchema.pre('validate', function(next) {
     if (this.title) {
         this.slug = slugify(this.title, { lower: true, strict: true });
-    }
-
-    if (this.markdown) {
-        this.sanitizedHtml = dompurify.sanitize(marked(this.markdown))
     }
 
     next();

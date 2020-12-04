@@ -1,0 +1,11 @@
+<div class="container">
+        <img src="{{post.banner}}" alt="Card image cap" class="card-img-top">
+        <h1 class="card-title mt-3">{{post.title}}</h1>
+        <p><span class="badge badge-success">{{post.category.title}}</span></p>
+        <p><b><i>{{post.desc}}</i></b></p>
+        <p class="text-muted">Posted on {{post.created_at}} by<a href=""> {{post.user.first_name}} {{post.user.last_name}}</a></p>
+        <div>
+            {{{post.content}}}
+        </div>
+        <p style="margin: 30px 0;" class="text-right text-muted"><i>Follow: <a href="">{{post.user.first_name}} {{post.user.last_name}}</a></i></p>
+</div>

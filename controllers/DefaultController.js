@@ -2,10 +2,9 @@ const Post = require('../models/Post').Post;
 const Category = require('../models/Category').Category;
 const User = require('../models/User').User;
 const bcrypt = require('bcrypt');
-const createDomPurify = require('dompurify');
-const { JSDOM } = require('jsdom');
-const dompurify = createDomPurify(new JSDOM().window);
-const marked = require('marked');
+
+var fs = require('fs')
+
 
 module.exports = {
 
@@ -89,13 +88,6 @@ module.exports = {
         res.redirect('/');
     },
 
-    preview: (req, res) => {
-        res.status(200).json({
-            message: 'ok',
-            data: marked(req.body.content)
-        })
-    },
-
     postDetail: async (req, res) => {
         var slug = req.params.slug;
         var post = await Post.findOne({slug: slug}).populate('user').populate('category').lean();
@@ -110,5 +102,46 @@ module.exports = {
             res.render('default/detail', {post: post, cats: cats});
         }
     },
+
+    getImage: (req, res) => {
+        const images = fs.readdirSync('public/uploads')
+        var sorted = []
+        for (let item of images){
+            if(item.split('.').pop() === 'png'
+            || item.split('.').pop() === 'jpg'
+            || item.split('.').pop() === 'jpeg'
+            || item.split('.').pop() === 'svg'){
+                var abc = {
+                        "image" : "/uploads/"+item,
+                        "folder" : '/'
+                }
+                sorted.push(abc)
+            }
+        }
+        res.send(sorted);
+    },
+
+    uploadImage : (req, res) => {
+        let prev = Math.floor(Math.random() * (100000 - 0)) + 0;
+        let file  = req.files.flFileUpload;
+        let fileName = prev+file.name;
+        let uploadDir = './public/uploads/';
+        file.mv(uploadDir+fileName, error => {
+            req.flash('error-message', 'Image file uploaded failed.');
+            if (error) {
+                throw error;
+            } else {
+                res.redirect('back');
+            }
+        });
+    },
+
+    deleteImage: (req, res) => {
+        var url_del = 'public' + req.body.url_del;
+            if(fs.existsSync(url_del)){
+                fs.unlinkSync(url_del)
+            }
+            res.redirect('back')
+        }
 
 };

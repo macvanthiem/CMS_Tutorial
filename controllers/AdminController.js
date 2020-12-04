@@ -30,29 +30,34 @@ module.exports = {
     },
 
     storePost: (req, res) => {
-        let file  = req.files.banner;
-        let fileName = file.name;
-        let uploadDir = './public/uploads/';
-        file.mv(uploadDir+fileName, error => {
-            req.flash('error-message', 'Image file uploaded failed.');
-            if (error) {
-                throw error;
-            };
-        });
+        let fileName;
+        if (req.files.banner) {
+            let prev = Math.floor(Math.random() * (100000 - 0)) + 0;
+            let file  = req.files.banner;
+            fileName = prev+file.name;
+            let uploadDir = './public/img/';
+            file.mv(uploadDir+fileName, error => {
+                req.flash('error-message', 'Image file uploaded failed.');
+                if (error) {
+                    throw error;
+                };
+            });
+        }
 
         const newPost = new Post({
             title: req.body.title,
             allow_comments: req.body.allow_comments ? true : false,
             desc: req.body.description,
-            markdown: req.body.markdown,
+            content: req.body.content,
             user: req.user._id,
             status: req.body.status,
             category: req.body.category,
-            banner: `/uploads/${fileName}`,
+            banner: fileName=='' ? '' : `/img/${fileName}`,
         });
+        
         newPost.save().then(post => {
             req.flash('success-message', 'Post created successfully.');
-            res.redirect('/admin/posts');
+            res.redirect('/admin/posts/show/'+post._id);
         })
         .catch(error => {
             req.flash('error-messange', 'Error connecting to server. Post created failed.');
@@ -82,8 +87,9 @@ module.exports = {
         if (req.body.checkUpload == '0') {
             // console.log(req.files);
             let file  = req.files.banner;
-            fileName = file.name;
-            let uploadDir = './public/uploads/';
+            let prev = Math.floor(Math.random() * (100000 - 0)) + 0;
+            fileName = prev+file.name;
+            let uploadDir = './public/img/';
             file.mv(uploadDir+fileName, error => {
                 if (error) {
                     throw error;
@@ -97,16 +103,16 @@ module.exports = {
             post.title = req.body.title;
             post.allow_comments = req.body.allow_comments ? true : false;
             post.desc = req.body.description;
-            post.markdown = req.body.markdown;
+            post.content = req.body.content;
             post.status = req.body.status;
             post.category = req.body.category;
             if (req.body.checkUpload == '0') {
-                post.banner = `/uploads/${fileName}`; 
+                post.banner = `/img/${fileName}`; 
             }
 
             post.save().then(post => {
                 req.flash('success-message', `The post ${post.title} has been updated.`);
-                res.redirect('/admin/posts');
+                res.redirect('/admin/posts/show/'+post._id);
             }).catch(error => {
                 req.flash('error-message', `Post updated failed.`);
                 res.redirect('/admin/posts');
@@ -120,6 +126,16 @@ module.exports = {
         const id = req.params.id;
         Post.findByIdAndDelete(id).lean().then(deletePost => {
             req.flash('success-message', `The post ${deletePost.title} has been deleted.`);
+            res.redirect('/admin/posts');
+        });
+    },
+
+    showPost: (req, res) => {
+        const id = req.params.id;
+        Post.findById(id).populate('user').populate('category').lean().then(post => {
+            res.render('admin/posts/show', {post: post});
+        }).catch(error => {
+            req.flash('error-message', 'Post does not exist!');
             res.redirect('/admin/posts');
         });
     },

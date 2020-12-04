@@ -37,6 +37,9 @@ router.route('/posts/edit/:id')
 router.route('/posts/update/:id')
     .post(adminController.updatePost);
 
+router.route('/posts/show/:id')
+    .get(adminController.showPost);
+
 router.route('/posts/delete/:id')
     .delete(adminController.deletePost);
 
