@@ -82,4 +82,7 @@ router.route('/delete_file')
 router.route('/upload')
     .post(defaultController.uploadImage);
 
+router.route('/comment')
+    .post(defaultController.storeComment);
+
 module.exports = router;

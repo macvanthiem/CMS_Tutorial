@@ -56,4 +56,7 @@ router.route('/categories/delete/:id')
 router.route('/comments')
     .get(adminController.getComments);
 
+router.route('/comments/update/:id')
+    .post(adminController.updateComment);
+
 module.exports = router;

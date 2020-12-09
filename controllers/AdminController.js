@@ -1,6 +1,6 @@
 const Post = require('../models/Post').Post;
 const Category = require('../models/Category').Category;
-const Comment = require('../models/Category').Comment;
+const Comment = require('../models/Comment').Comment;
 
 module.exports = {
 
@@ -193,7 +193,34 @@ module.exports = {
 
     // Comments
     getComments: (req, res) => {
-             
+        Post.find().populate({path: 'comments', populate: {path: 'user', model: 'user'}}).lean().then(posts => {
+            if (posts) {
+                res.render('admin/comments', {posts:posts});
+            } else {
+                req.flash('error-message', 'No posts at all!');
+                res.redirect('/admin');
+            }
+        }).catch(error => {
+            res.redirect('/admin');
+        });
+        
+    },
+
+    updateComment: (req, res) => {
+        let id = req.params.id;
+        let comment_is_approved = req.body.comment_is_approved;
+        Comment.findById(id).then(comment => {
+            comment.comment_is_approved = comment_is_approved;
+            comment.save().then(newComment => {
+                Comment.findById(id).populate('user').lean().then(data => {
+                    res.status(200).json(data);
+                })
+            }).catch(error => {
+                res.status(500);
+            })
+        }).catch(error => {
+            res.redirect('/admin/404');
+        })
     }
 
 }

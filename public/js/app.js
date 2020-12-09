@@ -38,7 +38,6 @@ $(document).ready(function() {
             },
         });
     });
-
 }); 
 
 var modal = document.getElementById("myModal");
@@ -104,4 +103,76 @@ function imageUpload () {
     }
     document.getElementById('checkUpload').value = '0';
 
+}
+
+function addComment(post_id, name) {
+    var content = document.getElementById("content-cmt").value;
+    if (content != '') {
+        var xmlhttp = new XMLHttpRequest();
+
+        var data = {};
+        data.content = content;
+        data.post = post_id;
+        var json = JSON.stringify(data);
+        
+        xmlhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log('ok');
+                let data = JSON.parse(xmlhttp.response);
+                let n = data.length;
+                let html = ``;
+                for (let i = n-1; i >= 0; i--) {
+                    if (data[i].comment_is_approved) {
+                        html += `<div class="media mb-4">
+                                    <img class="d-flex mr-3 rounded-circle" width="50px" height="50px" src="/img/img_avatar1.png" alt="">
+                                    <div class="media-body">
+                                        <h5 class="mt-0">${data[i].user.first_name} ${data[i].user.last_name}</h5>
+                                        ${data[i].content}
+                                    </div>
+                                </div>`
+                    }
+                }
+                document.getElementById('cmt-area').innerHTML = html;
+            };
+        };
+        xmlhttp.open("POST", "/comment", true);
+        xmlhttp.setRequestHeader('Content-type','application/json; charset=utf-8');
+        xmlhttp.send(json);
+    }
+}
+
+function turnOffCmt(_id, comment_is_approved) {
+    const xmlhttp = new XMLHttpRequest();
+
+    let data = {};
+    data.comment_is_approved = comment_is_approved == 'true' ? false : true;
+    
+    let json = JSON.stringify(data);
+
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log('ok');
+            let data = JSON.parse(xmlhttp.response);
+            let html = `<td>${data.user.first_name} ${data.user.last_name}</td>
+                        <td>${data.content}</td>
+                        <td>${data.created_at}</td>
+                        <td>`;
+            
+            if (data.comment_is_approved) {
+                html += `<p><span class="badge badge-success">online</span></p>`
+            } else {
+                html += `<p><span class="badge badge-danger">offline</span></p>`
+            }
+                           
+            html +=`</td>
+                    <td>
+                        <button class="btn btn-info btn-sm" onclick="turnOffCmt('${data._id}', '${data.comment_is_approved}')">Change</button>
+                    </td>`;
+            document.getElementById(_id).innerHTML = html;
+        };
+    };
+    xmlhttp.open("POST", "/admin/comments/update/"+_id, true);
+    xmlhttp.setRequestHeader('Content-type','application/json; charset=utf-8');
+    xmlhttp.send(json);
+    
 }

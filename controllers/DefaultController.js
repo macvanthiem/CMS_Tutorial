@@ -1,4 +1,5 @@
 const Post = require('../models/Post').Post;
+const Comment = require('../models/Comment').Comment;
 const Category = require('../models/Category').Category;
 const User = require('../models/User').User;
 const bcrypt = require('bcrypt');
@@ -85,12 +86,12 @@ module.exports = {
     logout: (req, res) => {
         req.flash('success-message', 'You have been logouted.');
         req.logout();
-        res.redirect('/');
+        res.redirect('/news/1');
     },
 
     postDetail: async (req, res) => {
         var slug = req.params.slug;
-        var post = await Post.findOne({slug: slug}).populate('user').populate('category').lean();
+        var post = await Post.findOne({slug: slug}).populate('user').populate({path: 'comments', populate: {path: 'user', model: 'user'}}).lean();
         var cats = await Category.find().lean();
         if (req.user) {
             let user = req.user;
@@ -138,10 +139,37 @@ module.exports = {
 
     deleteImage: (req, res) => {
         var url_del = 'public' + req.body.url_del;
-            if(fs.existsSync(url_del)){
-                fs.unlinkSync(url_del)
-            }
-            res.redirect('back')
+        if(fs.existsSync(url_del)){
+            fs.unlinkSync(url_del)
         }
+        res.redirect('back')
+    },
+
+    storeComment: (req, res) => {
+        let content = req.body.content;
+        let post_id = req.body.post;
+
+        Post.findById(post_id).then(post => {
+            const new_comment = new Comment({
+                content: content,
+                user: req.user._id 
+            });
+            if (post) {
+                post.comments.push(new_comment);
+                post.save().then(savedPost => {
+                    new_comment.save().then(savedComment => {
+                        Post.findById(post_id).populate({path: 'comments', populate: {path: 'user', model: 'user'}}).lean().then(data => {
+                            res.status(200).json(data.comments);
+                        });
+                    })
+                });
+            } else {
+                res.status(500);
+            }
+        }).catch(error => {
+            res.status(500);
+            throw error;
+        });
+    }
 
 };

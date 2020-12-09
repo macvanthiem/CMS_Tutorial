@@ -19,6 +19,8 @@ mongoose.connect(mongoDbUrl, { useNewUrlParser: true, useUnifiedTopology: true, 
 .catch(error => {
     console.log('Fail');
 });
+require('./models/Post');
+require('./models/Comment');
 
 // Flash and Session
 

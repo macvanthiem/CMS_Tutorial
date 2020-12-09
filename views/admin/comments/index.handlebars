@@ -1,0 +1,43 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Comments</h1>
+</div>
+<div class="container">
+    <ul class="nav flex-column">
+        {{#each posts}}
+        <li class="nav-item">
+            <a class="nav-link h4 text-secondary" data-toggle="collapse" href="#{{slug}}" role="button" aria-expanded="false" aria-controls="{{slug}}">
+                <i class="fa fa-fw fa-file"></i>
+                <span class="nav-link-text">{{title}}</span>
+            </a>
+            <table class="table table-hover collapse" id="{{slug}}">
+                <tbody>
+                    <thead>
+                        <th>Created by</th>
+                        <th>Content</th>
+                        <th>Created at</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </thead>
+                    {{#each comments}}
+                    <tr id="{{_id}}">
+                        <td>{{user.first_name}} {{user.last_name}}</td>
+                        <td>{{content}}</td>
+                        <td>{{created_at}}</td>
+                        <td>
+                            {{#if comment_is_approved}}
+                                <p><span class="badge badge-success">online</span></p>
+                            {{else}}
+                                <p><span class="badge badge-danger">offline</span></p>
+                            {{/if}}
+                        </td>
+                        <td>
+                            <button class="btn btn-info btn-sm" onclick="turnOffCmt('{{_id}}', '{{comment_is_approved}}')">Change</button>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </li>
+        {{/each}}
+    </ul>
+</div>
