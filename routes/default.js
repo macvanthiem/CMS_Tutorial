@@ -19,6 +19,9 @@ router.all('/*', (req, res, next) => {
     next();
 })
 
+router.route('/')
+    .get(defaultController.home);
+
 router.route('/news/:page')
     .get(defaultController.index);
 

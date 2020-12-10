@@ -59,4 +59,11 @@ router.route('/comments')
 router.route('/comments/update/:id')
     .post(adminController.updateComment);
 
+router.route('/users/:page')
+    .get(adminController.getUsers);
+
+router.route('/users/update/:id')
+    .post(adminController.updateRole);
+
+
 module.exports = router;

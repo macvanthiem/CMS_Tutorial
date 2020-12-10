@@ -174,5 +174,39 @@ function turnOffCmt(_id, comment_is_approved) {
     xmlhttp.open("POST", "/admin/comments/update/"+_id, true);
     xmlhttp.setRequestHeader('Content-type','application/json; charset=utf-8');
     xmlhttp.send(json);
+}
+
+function updateRole(_id, role) {
+    const xmlhttp = new XMLHttpRequest();
+
+    let data = {};
+    data.role = role == 'true' ? false : true;
     
+    let json = JSON.stringify(data);
+
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log('ok');
+            let data = JSON.parse(xmlhttp.response);
+            let html = `<td>${data.first_name}</td>
+                        <td>${data.last_name}</td>
+                        <td>${data.email}</td>
+                        <td>`;
+            
+            if (data.role) {
+                html += `<p><span class="badge badge-success">Admin</span></p>`
+            } else {
+                html += `<p><span class="badge badge-warning">User</span></p>`
+            }
+                           
+            html +=`</td>
+                    <td>
+                        <button class="btn btn-info btn-sm" onclick="updateRole('${data._id}', '${data.role}')">Change</button>
+                    </td>`;
+            document.getElementById(_id).innerHTML = html;
+        };
+    };
+    xmlhttp.open("POST", "/admin/users/update/"+_id, true);
+    xmlhttp.setRequestHeader('Content-type','application/json; charset=utf-8');
+    xmlhttp.send(json);
 }

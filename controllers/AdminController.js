@@ -1,6 +1,7 @@
 const Post = require('../models/Post').Post;
 const Category = require('../models/Category').Category;
 const Comment = require('../models/Comment').Comment;
+const User = require('../models/User').User;
 
 module.exports = {
 
@@ -221,7 +222,42 @@ module.exports = {
         }).catch(error => {
             res.redirect('/admin/404');
         })
-    }
+    },
+
+    // User
+
+    getUsers: async (req, res) => {
+        let per_page = 1;
+        let page = req.params.page || 1;
+
+        const users = await User.find().skip(per_page*page - per_page).limit(per_page).lean();
+        const count_posts = await User.countDocuments();
+        let count_page = Math.ceil(count_posts/per_page);
+        let list_page = new Array();
+        for (let i = 1; i <= count_page; i++) {
+            list_page.push(i);
+        }
+        let pre = page > 1 ? true : false;
+        let pre_value = Number(page) - 1 ;
+        let next = count_page > page ? true : false; 
+        let next_value = Number(page) +1;
+        res.render('admin/users', {users: users, list_page: list_page, pre: pre, pre_value: pre_value, next: next, next_value: next_value});
+    },
+
+    updateRole: (req, res) => {
+        let id = req.params.id;
+        let role = req.body.role;
+        User.findById(id).then(user => {
+            user.role = role;
+            user.save().then(newUser => {
+                res.status(200).json(newUser);
+            }).catch(error => {
+                res.status(500);
+            })
+        }).catch(error => {
+            res.redirect('/admin/404');
+        })
+    },
 
 }
 

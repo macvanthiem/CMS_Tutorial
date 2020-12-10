@@ -36,6 +36,11 @@ module.exports = {
         }
         
     },
+
+    home: (req, res) => {
+        res.redirect('/news/1');
+    },
+
     loginGet: (req, res) => {
         res.render('default/login');
     },

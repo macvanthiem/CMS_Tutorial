@@ -1,0 +1,60 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Users</h1>
+</div>
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">First Name</th>
+                <th scope="col">Last name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Role</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each users}}
+            <tr id="{{_id}}">
+                <td>{{first_name}}</td>
+                <td>{{last_name}}</td>
+                <td>{{email}}</td>
+                <td>
+                    {{#if role}}
+                        <p><span class="badge badge-success">Admin</span></p>
+                    {{else}}
+                        <p><span class="badge badge-warning">User</span></p>
+                    {{/if}}
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-info" onclick="updateRole('{{_id}}', '{{role}}')">Change</button>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            {{#if pre}}
+                <li class="page-item">
+                    <a class="page-link" href="/admin/users/{{pre_value}}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            {{/if}}
+            {{#each list_page}}
+                <li class="page-item">
+                    <a class="page-link" href="/admin/users/{{this}}">{{this}}</a>
+                </li>
+            {{/each}}
+            {{#if next}}
+                <li class="page-item">
+                    <a class="page-link" href="/admin/users/{{next_value}}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            {{/if}}
+        </ul>
+    </nav>
+
+</div>
