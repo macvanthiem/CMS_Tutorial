@@ -1,13 +1,158 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Dashboard</h1>
-    <div class="btn-toolbar mb-2 mb-md-0">
-    <div class="btn-group mr-2">
-        <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-        <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-    </div>
-    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-        <span data-feather="calendar"></span>
-        This week
-    </button>
-    </div>
+    {{!-- <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group mr-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+            <span data-feather="calendar"></span>
+            This week
+        </button>
+    </div> --}}
 </div>
+
+<div class="container">
+
+    <div class="card-deck">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-header"> <i class="fa fa-fw fa-file"></i> Post</div>
+            <div class="card-body">
+                <h5 class="card-title">{{count_posts}} posts</h5>
+            </div>
+        </div>
+        <div class="card text-white bg-success mb-3">
+            <div class="card-header"> <i class="fa fa-fw fa-tags"></i> Category</div>
+            <div class="card-body">
+                <h5 class="card-title">{{count_cats}} categories</h5>
+            </div>
+        </div>
+
+        <div class="card text-white bg-secondary mb-3">
+            <div class="card-header"> <i class="fa fa-fw fa-comments"></i> Comment</div>
+            <div class="card-body">
+                <h5 class="card-title">{{count_cmts}} comments</h5>
+            </div>
+        </div>
+
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-header"> <i class="fa fa-fw fa-user"></i> User</div>
+            <div class="card-body">
+                <h5 class="card-title">{{count_users}} users</h5>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-md-1">
+            
+        </div>
+        <div class="col-md-10">
+            <canvas id="myChart"></canvas>
+            <p class="text-center mt-3"><i>Posts - Categories chart</i></p>
+        </div>
+
+        <div class="col-md-1">
+            
+        </div>
+    </div>
+
+    <hr>
+
+    <h2 class="text-info"><i class="fa fa-fw fa-file"></i>  Posts</h2>
+
+    <table class="table table-striped table-hover my-4">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Category</th>
+                <th scope="col">Created_by</th>
+                <th scope="col">Allow Comment</th>
+                <th scope="col">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each posts }}
+                <tr>
+                    <td>{{title}}</td>
+                    <td>{{category.title}}</td>
+                    <td>{{user.first_name}} {{user.last_name}}</td>
+                    <td>{{allow_comments}}</td>
+                    <td>{{status}}</td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    <a href="/admin/posts" class="btn btn-info">View more</a>
+
+    <hr>
+
+    <h2 class="text-warning"><i class="fa fa-fw fa-user"></i>  Users</h2>
+
+    <table class="table table-striped my-4">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">First Name</th>
+                <th scope="col">Last name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Role</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each users}}
+            <tr id="{{_id}}">
+                <td>{{first_name}}</td>
+                <td>{{last_name}}</td>
+                <td>{{email}}</td>
+                <td>
+                    {{#if role}}
+                        <p><span class="badge badge-success">Admin</span></p>
+                    {{else}}
+                        <p><span class="badge badge-warning">User</span></p>
+                    {{/if}}
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    <a href="/admin/users/1" class="btn btn-info mb-3">View more</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+<script>
+
+    let dataRES = '';
+    const xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log('ok');
+            dataRES = JSON.parse(xmlhttp.response);
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: dataRES.labels,
+                    datasets: [{
+                        label: '# of Votes',
+                        data: dataRES.data,
+                        backgroundColor: dataRES.bg,
+                        borderColor: dataRES.border,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    cutouPercentage: 0
+                }
+            });
+        };
+    };
+    xmlhttp.open("GET", "/admin/prepare", true);
+    xmlhttp.setRequestHeader('Content-type','application/json; charset=utf-8');
+    xmlhttp.send();
+
+</script>

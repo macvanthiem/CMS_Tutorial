@@ -10,7 +10,7 @@ var fs = require('fs')
 module.exports = {
 
     index: async (req, res) => {
-        let per_page = 1;
+        let per_page = 3;
         let page = req.params.page || 1;
 
         const posts = await Post.find().skip(per_page*page - per_page).limit(per_page).populate('user').populate('category').lean(); 

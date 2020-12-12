@@ -142,71 +142,81 @@ function addComment(post_id, name) {
 }
 
 function turnOffCmt(_id, comment_is_approved) {
-    const xmlhttp = new XMLHttpRequest();
+    var cf = confirm(`Do you want to change this comment's status ?`);
 
-    let data = {};
-    data.comment_is_approved = comment_is_approved == 'true' ? false : true;
-    
-    let json = JSON.stringify(data);
-
-    xmlhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            console.log('ok');
-            let data = JSON.parse(xmlhttp.response);
-            let html = `<td>${data.user.first_name} ${data.user.last_name}</td>
-                        <td>${data.content}</td>
-                        <td>${data.created_at}</td>
-                        <td>`;
-            
-            if (data.comment_is_approved) {
-                html += `<p><span class="badge badge-success">online</span></p>`
-            } else {
-                html += `<p><span class="badge badge-danger">offline</span></p>`
-            }
-                           
-            html +=`</td>
-                    <td>
-                        <button class="btn btn-info btn-sm" onclick="turnOffCmt('${data._id}', '${data.comment_is_approved}')">Change</button>
-                    </td>`;
-            document.getElementById(_id).innerHTML = html;
+    if (cf == true) {
+        const xmlhttp = new XMLHttpRequest();
+        let data = {};
+        data.comment_is_approved = comment_is_approved == 'true' ? false : true;
+        let json = JSON.stringify(data);
+        xmlhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log('ok');
+                let data = JSON.parse(xmlhttp.response);
+                let html = `<td>${data.user.first_name} ${data.user.last_name}</td>
+                            <td>${data.content}</td>
+                            <td>${data.created_at}</td>
+                            <td>`;
+                
+                if (data.comment_is_approved) {
+                    html += `<p><span class="badge badge-success">online</span></p>`
+                } else {
+                    html += `<p><span class="badge badge-danger">offline</span></p>`
+                }
+                            
+                html +=`</td>
+                        <td>
+                            <button class="btn btn-info btn-sm" onclick="turnOffCmt('${data._id}', '${data.comment_is_approved}')">Change</button>
+                        </td>`;
+                document.getElementById(_id).innerHTML = html;
+            };
         };
-    };
-    xmlhttp.open("POST", "/admin/comments/update/"+_id, true);
-    xmlhttp.setRequestHeader('Content-type','application/json; charset=utf-8');
-    xmlhttp.send(json);
+        xmlhttp.open("POST", "/admin/comments/update/"+_id, true);
+        xmlhttp.setRequestHeader('Content-type','application/json; charset=utf-8');
+        xmlhttp.send(json);
+    }
 }
 
 function updateRole(_id, role) {
-    const xmlhttp = new XMLHttpRequest();
-
-    let data = {};
-    data.role = role == 'true' ? false : true;
-    
-    let json = JSON.stringify(data);
-
-    xmlhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            console.log('ok');
-            let data = JSON.parse(xmlhttp.response);
-            let html = `<td>${data.first_name}</td>
-                        <td>${data.last_name}</td>
-                        <td>${data.email}</td>
-                        <td>`;
-            
-            if (data.role) {
-                html += `<p><span class="badge badge-success">Admin</span></p>`
-            } else {
-                html += `<p><span class="badge badge-warning">User</span></p>`
-            }
-                           
-            html +=`</td>
-                    <td>
-                        <button class="btn btn-info btn-sm" onclick="updateRole('${data._id}', '${data.role}')">Change</button>
-                    </td>`;
-            document.getElementById(_id).innerHTML = html;
+    var cf = confirm(`Do you want to change this user's role ?`);
+    if (cf == true) {
+        const xmlhttp = new XMLHttpRequest();
+        let data = {};
+        data.role = role == 'true' ? false : true;
+        let json = JSON.stringify(data);
+        xmlhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log('ok');
+                let data = JSON.parse(xmlhttp.response);
+                let html = `<td>${data.first_name}</td>
+                            <td>${data.last_name}</td>
+                            <td>${data.email}</td>
+                            <td>`;
+                
+                if (data.role) {
+                    html += `<p><span class="badge badge-success">Admin</span></p>`
+                } else {
+                    html += `<p><span class="badge badge-warning">User</span></p>`
+                }
+                            
+                html +=`</td>
+                        <td>
+                            <button class="btn btn-info btn-sm" onclick="updateRole('${data._id}', '${data.role}')">Change</button>
+                        </td>`;
+                document.getElementById(_id).innerHTML = html;
+            };
         };
-    };
-    xmlhttp.open("POST", "/admin/users/update/"+_id, true);
-    xmlhttp.setRequestHeader('Content-type','application/json; charset=utf-8');
-    xmlhttp.send(json);
+        xmlhttp.open("POST", "/admin/users/update/"+_id, true);
+        xmlhttp.setRequestHeader('Content-type','application/json; charset=utf-8');
+        xmlhttp.send(json);
+    }
+}
+
+function confirmDelete() {
+    var cf = confirm('Do you want to delete this post?');
+    if (cf == true) {
+        return true;
+    } else {
+        return false;
+    }
 }

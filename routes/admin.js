@@ -24,6 +24,9 @@ router.all('/*', isUserAuthenticated, (req, res, next) => {
 router.route('/')
     .get(adminController.index);
 
+router.route('/prepare')
+    .get(adminController.prepareData);
+
 router.route('/posts')
     .get(adminController.getPosts);
 

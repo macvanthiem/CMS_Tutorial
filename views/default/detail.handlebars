@@ -21,15 +21,19 @@
         <hr>
         <!-- Comments Form -->
         {{#if user}}
-            <div class="card my-4">
-                <h5 class="card-header">Leave a Comment:</h5>
-                <div class="card-body">
-                    <div class="form-group">
-                        <textarea class="form-control" rows="3" id="content-cmt"></textarea>
+            {{#if post.allow_comments}}
+                <div class="card my-4">
+                    <h5 class="card-header">Leave a Comment:</h5>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <textarea class="form-control" rows="3" id="content-cmt"></textarea>
+                        </div>
+                        <button class="btn btn-primary" onclick="addComment('{{post._id}}', '{{name}}')">Send</button>
                     </div>
-                    <button class="btn btn-primary" onclick="addComment('{{post._id}}', '{{name}}')">Send</button>
                 </div>
-            </div>
+            {{/if}}
+        {{else}}
+            <div class="alert alert-dark" role="alert"><a href="/login">Login to comment!</a></div>
         {{/if}}
         <!-- Single Comment -->
         <div id="cmt-area">

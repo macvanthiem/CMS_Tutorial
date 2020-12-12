@@ -2,12 +2,50 @@ const Post = require('../models/Post').Post;
 const Category = require('../models/Category').Category;
 const Comment = require('../models/Comment').Comment;
 const User = require('../models/User').User;
+const { backgroundColor, borderColor } = require('../config/configuration');
 
 module.exports = {
 
     // Dashboard
-    index: (req, res) => {
-        res.render('admin/index');
+    index: async (req, res) => {
+        let count_cats = await Category.countDocuments();
+        let count_posts = await Post.countDocuments();
+        let count_users = await User.countDocuments();
+        let count_cmts = await Comment.countDocuments();
+
+        let posts = await Post.find().populate('category').populate('user').limit(5).lean();
+
+        let users = await User.find().limit(5).lean();
+
+        res.render('admin/index', {count_cats: count_cats, count_posts: count_posts, count_users: count_users, count_cmts: count_cmts, posts: posts, users: users});
+    },
+
+    prepareData : async (req, res) => {
+        let cats = await Category.find().lean();
+        let posts = await Post.find().lean();
+        let users = await User.find().lean();
+        let count_cats = cats.length;
+        let count_posts = posts.length;
+        let count_users = users.length;
+        let bg = new Array();
+        let border = new Array();
+        let labels = new Array();
+        let data = new Array();
+        for (let i = 0; i < count_cats; i++) {
+            bg[i] = backgroundColor[i];
+            border[i] = borderColor[i];
+            labels[i] = cats[i].title;
+            data[i] = 0;
+            for (let j = 0; j < count_posts; j++) {
+                if (String(posts[j].category) == String(cats[i]._id)) {
+                    data[i] += 1;
+                }
+            }
+        }
+
+        let res_data = {labels: labels, data: data, bg: bg, border: border};
+
+        res.status(200).json(res_data);
     },
 
     // Posts
@@ -31,8 +69,8 @@ module.exports = {
     },
 
     storePost: (req, res) => {
-        let fileName;
-        if (req.files.banner) {
+        let fileName = '';
+        if (req.files != null) {
             let prev = Math.floor(Math.random() * (100000 - 0)) + 0;
             let file  = req.files.banner;
             fileName = prev+file.name;
@@ -53,7 +91,7 @@ module.exports = {
             user: req.user._id,
             status: req.body.status,
             category: req.body.category,
-            banner: fileName=='' ? '' : `/img/${fileName}`,
+            banner: fileName=='' ? '/img/758x380.png' : `/img/${fileName}`,
         });
         
         newPost.save().then(post => {
