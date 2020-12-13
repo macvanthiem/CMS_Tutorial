@@ -220,3 +220,35 @@ function confirmDelete() {
         return false;
     }
 }
+
+function liveSearch() {
+    let x = document.getElementById("search").value;
+    if (x != '') {
+        const xmlhttp = new XMLHttpRequest();
+        let data = {};
+        data.content = x;
+        let json = JSON.stringify(data);
+        xmlhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log('ok');
+                let data = JSON.parse(xmlhttp.response);
+                let n = data.length;
+                if (n > 0) {
+                    let html = ``;
+                    for (let i = 0; i < n; i++) {
+                        html += `<p class="bg-light"><a href="/posts/${data[i].slug}">${data[i].title}</a></p>`;
+                    }
+                    document.getElementById('result-search').innerHTML = html;
+                } else {
+                    document.getElementById('result-search').innerHTML = `<p class="bg-light">No results . . .</p>`
+                }
+                
+            };
+        };
+        xmlhttp.open("POST", "/live_search", true);
+        xmlhttp.setRequestHeader('Content-type','application/json; charset=utf-8');
+        xmlhttp.send(json);
+    } else {
+        document.getElementById('result-search').innerHTML = '';
+    }
+}

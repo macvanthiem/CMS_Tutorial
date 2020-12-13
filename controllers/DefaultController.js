@@ -175,6 +175,12 @@ module.exports = {
             res.status(500);
             throw error;
         });
+    },
+
+    liveSearch: async (req, res) => {
+        let content = req.body.content;
+        let posts = await Post.find({"title": {$regex: ".*" + content + ".*"}}).lean();
+        res.status(200).json(posts);
     }
 
 };

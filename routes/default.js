@@ -88,4 +88,7 @@ router.route('/upload')
 router.route('/comment')
     .post(defaultController.storeComment);
 
+router.route('/live_search')
+    .post(defaultController.liveSearch);
+
 module.exports = router;
