@@ -8,8 +8,11 @@ const session = require('express-session');
 const methodOverride = require('method-override');
 const fileUpload = require('express-fileupload');
 const passport = require('passport');
+const favicon = require('express-favicon');
 
 const app = express();
+
+app.use(favicon(__dirname + '/public/img/favicon.jpg'));
 
 // Configure Mongoose
 mongoose.connect(mongoDbUrl, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
