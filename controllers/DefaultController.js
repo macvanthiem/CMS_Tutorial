@@ -177,6 +177,47 @@ module.exports = {
         });
     },
 
+    search: async (req, res) => {
+        let content = req.body.search;
+        let posts = await Post.find({"title": {$regex: ".*" + content + ".*"}}).populate('user').populate('category').lean();
+        let cats = await Category.find().lean();
+        let has_result = posts.length > 0 ? true : false;
+        if (req.user) {
+            let user = req.user;
+            let user_name = user.last_name + ' ' + user.first_name;
+            let email = user.email;
+            let role = user.role;
+            res.render('default/search', {has_result: has_result, posts: posts, cats: cats, content: content, name : user_name, email: email, role: role});
+        } else {
+            res.render('default/search', {has_result: has_result, posts: posts, cats: cats, content: content});
+        }
+    },
+
+    searchByCategory: async (req, res) => {
+        let cat_id = req.params.cat;
+        let posts = await Post.find().populate('user').populate('category').lean();
+        let cats = await Category.find().lean();
+        let results = new Array();
+        for (let i = 0; i < posts.length; i++) {
+            if (String(posts[i].category._id) == cat_id) {
+                results.push(posts[i]);
+
+            }
+        }
+        let has_result = results.length > 0 ? true : false;
+        let content = 'Search by Category';
+        if (req.user) {
+            let user = req.user;
+            let user_name = user.last_name + ' ' + user.first_name;
+            let email = user.email;
+            let role = user.role;
+            res.render('default/search', {has_result: has_result, posts: results, cats: cats, content: content, name : user_name, email: email, role: role});
+        } else {
+            res.render('default/search', {has_result: has_result, posts: results, cats: cats, content: content});
+        }
+
+    },
+
     liveSearch: async (req, res) => {
         let content = req.body.content;
         let posts = await Post.find({"title": {$regex: ".*" + content + ".*"}}).lean();

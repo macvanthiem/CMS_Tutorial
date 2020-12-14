@@ -88,6 +88,11 @@ router.route('/upload')
 router.route('/comment')
     .post(defaultController.storeComment);
 
+router.route('/search')
+    .post(defaultController.search);
+router.route('/search/:cat')
+    .get(defaultController.searchByCategory)
+
 router.route('/live_search')
     .post(defaultController.liveSearch);
 
