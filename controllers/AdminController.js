@@ -97,8 +97,8 @@ module.exports = {
             res.redirect('/admin/posts/show/'+post._id);
         })
         .catch(error => {
-            req.flash('error-messange', 'Error connecting to server. Post created failed.');
-            res.redirect('/admin/posts');
+            req.flash('error-messange', 'Post created failed.');
+            res.redirect('/admin/posts/create');
         });
     },
 
